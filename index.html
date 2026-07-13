@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>福星國際興業有限公司｜客戶資料收集系統</title>
+  <link rel="stylesheet" href="style.css?v=2">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="code.js?v=5" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>福星國際興業有限公司</h1>
+    <h2>客戶資料收集系統</h2>
+
+    <section id="pageA" class="page">
+      <div class="card">
+        <h2>公司體系</h2>
+        <div class="customer-grid">
+          <button type="button" class="customer-btn step-a-btn" data-val="主管">主管</button>
+          <button type="button" class="customer-btn step-a-btn" data-val="財務">財務</button>
+          <button type="button" class="customer-btn step-a-btn" data-val="作業員">作業員</button>
+          <button type="button" class="customer-btn step-a-btn" data-val="客戶">客戶</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pageB" class="page hidden">
+      <div class="card">
+        <h2>理貨部門</h2>
+        <div class="customer-grid">
+          <button type="button" class="customer-btn step-b-btn" data-val="1">1</button>
+          <button type="button" class="customer-btn step-b-btn" data-val="2">2</button>
+          <button type="button" class="customer-btn step-b-btn" data-val="3">3</button>
+          <button type="button" class="customer-btn step-b-btn" data-val="4">4</button>
+          <button type="button" class="customer-btn step-b-btn" data-val="出貨主任">出貨主任</button>
+        </div>
+        <div class="btn-row center" style="margin-top: 24px;">
+          <button type="button" class="btn" onclick="showPage('A')">上一步</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="page1" class="page hidden">
+      <div class="card">
+        <h2>第三步：基本資料</h2>
+
+        <div class="time-block">
+          <div class="time-label">日期時間</div>
+          <div id="dateDisplay" class="time-text"></div>
+        </div>
+
+        <label class="label">客戶名稱</label>
+        <div id="customerGrid" class="customer-grid"></div>
+
+        <div class="btn-row center" style="margin-top: 24px;">
+          <button type="button" class="btn" onclick="showPage('B')">上一步</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="page2" class="page hidden">
+      <div class="card">
+        <h2>第四步：品項與數量</h2>
+
+        <label class="label" for="project">品項</label>
+        <select id="project" class="input"></select>
+
+        <label class="label" for="quantity">數量</label>
+        <input id="quantity" type="text" class="input" placeholder="例如：23" readonly>
+
+        <label class="label">數字鍵盤</label>
+        <div class="keypad">
+          <button type="button" class="keypad-btn" data-value="1">1</button>
+          <button type="button" class="keypad-btn" data-value="2">2</button>
+          <button type="button" class="keypad-btn" data-value="3">3</button>
+          <button type="button" class="keypad-btn" data-value="4">4</button>
+          <button type="button" class="keypad-btn" data-value="5">5</button>
+          <button type="button" class="keypad-btn" data-value="6">6</button>
+          <button type="button" class="keypad-btn" data-value="7">7</button>
+          <button type="button" class="keypad-btn" data-value="8">8</button>
+          <button type="button" class="keypad-btn" data-value="9">9</button>
+          <button type="button" id="btnClearQuantity">C</button>
+          <button type="button" class="keypad-btn" data-value="0">0</button>
+          <button type="button" id="btnBackspaceQuantity">←</button>
+        </div>
+
+        <div class="btn-row center">
+          <button type="button" id="btnBackToPage1" class="btn">上一步</button>
+          <button type="button" id="btnSubmitData" class="btn primary">確認送出</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="page3" class="page hidden">
+      <div class="card success-card">
+        <h2>資料已新增</h2>
+
+        <div class="success-summary">
+          <p>客戶名稱：<span id="resultCustomer"></span></p>
+          <p>日期時間：<span id="resultDate"></span></p>
+          <p>品項：<span id="resultProject"></span></p>
+          <p>數量：<span id="resultQuantity"></span></p>
+        </div>
+
+        <div class="btn-row center">
+          <button type="button" id="btnPrepareNext" class="btn">繼續新增下一筆</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="dataCenterSection" class="card hidden">
+      <h2>資料集中區</h2>
+      
+      <div class="btn-row center" style="margin-bottom: 20px;">
+        <button type="button" class="btn" onclick="showPage('A')">返回首頁</button>
+      </div>
+
+      <div id="lockSection" class="lock-box">
+        <p>此區域已上鎖，請輸入密碼查看資料</p>
+        <input id="tablePassword" type="password" class="input small-input" placeholder="請輸入密碼">
+        <div class="btn-row center">
+          <button type="button" id="btnUnlockTable" class="btn primary">解鎖</button>
+        </div>
+      </div>
+
+      <div id="tableSection" class="hidden">
+        <div id="adminControls">
+          <div class="card" style="margin-bottom: 20px;">
+            <h3>客戶名單管理</h3>
+            <label class="label" for="newCustomerName">新增客戶名稱</label>
+            <input id="newCustomerName" type="text" class="input" placeholder="例如：A客戶">
+
+            <label class="label" for="newCustomerProjects">新增客戶品項</label>
+            <input id="newCustomerProjects" type="text" class="input" placeholder="例如：1 2（多個品項請用空格分隔）">
+
+            <div class="btn-row">
+              <button type="button" id="btnAddCustomer" class="btn primary">新增客戶</button>
+            </div>
+
+            <h3 style="margin-top: 24px;">現有客戶</h3>
+            <div id="customerManageList" style="margin-top: 16px;"></div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="dataTable">
+            <thead>
+              <tr>
+                <th>客戶名稱</th>
+                <th>日期時間</th>
+                <th>品項</th>
+                <th>數量</th>
+                <th id="operationHeader">操作</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="btn-row center">
+          <button type="button" id="btnLockTable" class="btn">上鎖</button>
+          <button type="button" id="btnExportCsv" class="btn primary">匯出 CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
